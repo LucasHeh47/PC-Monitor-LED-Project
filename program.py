@@ -84,4 +84,4 @@ def breathing(colors, speed):
 while True:
     color = get_average_screen_color(1000)
     solid(color)
-    time.sleep(0.5)
+    time.sleep(0.05)

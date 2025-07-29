@@ -8,46 +8,31 @@ cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     raise Exception("Could not open HDMI capture device")
 
-def get_average_screen_color(num_samples=100, max_offset=50):
-    cap = cv2.VideoCapture("/dev/video1", cv2.CAP_V4L2)
-    if not cap.isOpened():
-        print("Cannot open HDMI capture device")
-        return (0, 0, 0)
-
+def get_average_screen_color(sample_count=50, spread=50):
     ret, frame = cap.read()
-    cap.release()
-
     if not ret:
         print("Failed to grab frame")
         return (0, 0, 0)
 
-    h, w, _ = frame.shape
-    total_color = np.array([0, 0, 0], dtype=np.uint64)
-    count = 0
+    height, width, _ = frame.shape
 
-    for _ in range(num_samples):
-        x = random.randint(max_offset, w - max_offset - 1)
-        y = random.randint(max_offset, h - max_offset - 1)
+    # Random center point
+    center_y = random.randint(spread, height - spread - 1)
+    center_x = random.randint(spread, width - spread - 1)
 
-        # Include center pixel
-        total_color += frame[y, x]
-        count += 1
+    pixels = []
+    for _ in range(sample_count):
+        dy = random.randint(-spread, spread)
+        dx = random.randint(-spread, spread)
+        y = min(max(center_y + dy, 0), height - 1)
+        x = min(max(center_x + dx, 0), width - 1)
+        pixels.append(frame[y, x])
 
-        # Check pixels at offsets up/down/left/right up to max_offset
-        for offset in range(1, max_offset + 1, 10):  # step by 10 pixels to keep it efficient
-            positions = [
-                (x + offset, y),
-                (x - offset, y),
-                (x, y + offset),
-                (x, y - offset),
-            ]
-            for px, py in positions:
-                if 0 <= px < w and 0 <= py < h:
-                    total_color += frame[py, px]
-                    count += 1
+    # Convert from BGR to RGB and average
+    rgb_pixels = [tuple(reversed(p)) for p in pixels]
+    avg_color = tuple(int(np.mean([p[i] for p in rgb_pixels])) for i in range(3))
 
-    avg_color = (total_color / count).astype(int)
-    return tuple(avg_color[::-1])  # BGR to RGB
+    return avg_color
 
 # Optional: clean up
 def release_capture():

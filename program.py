@@ -80,27 +80,28 @@ def breathing(colors, speed):
                 time.sleep(speed)
 
 def snake_animation(colors, length, delay=0.05):
-    snake_colors = []
+    while True:
+        snake_colors = []
 
-    # Repeat or trim the colors to match the desired snake length
-    while len(snake_colors) < length:
-        snake_colors.extend(colors)
-    snake_colors = snake_colors[:length]
+        # Repeat or trim the colors to match the desired snake length
+        while len(snake_colors) < length:
+            snake_colors.extend(colors)
+        snake_colors = snake_colors[:length]
 
-    for i in range(NUM_LEDS + length):
-        # Clear all LEDs
-        for j in range(NUM_LEDS):
-            pixels[j] = (0, 0, 0)
+        for i in range(NUM_LEDS + length):
+            # Clear all LEDs
+            for j in range(NUM_LEDS):
+                pixels[j] = (0, 0, 0)
 
-        # Draw snake
-        for j in range(length):
-            pos = i - j
-            if 0 <= pos < NUM_LEDS:
-                r, g, b = snake_colors[j]
-                pixels[pos] = (r, g, b)
+            # Draw snake
+            for j in range(length):
+                pos = i - j
+                if 0 <= pos < NUM_LEDS:
+                    r, g, b = snake_colors[j]
+                    pixels[pos] = (r, g, b)
 
-        pixels.show()
-        time.sleep(delay)
+            pixels.show()
+            time.sleep(delay)
 
 
 

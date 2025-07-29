@@ -85,6 +85,6 @@ try:
     init_sample_points(sample_count=200)  # Sample 36 evenly spaced pixels
     while True:
         color = get_average_screen_color()
-        print("Avg Color:", color)
+        solid(color)
 except KeyboardInterrupt:
     release_capture()

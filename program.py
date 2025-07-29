@@ -52,25 +52,26 @@ def solid(r, g, b):
     pixels.show()
 
 def breathing(colors, speed):
-    brightness_steps = 100  # Number of brightness levels in and out
-    for color in colors:
-        r, g, b = color
+    while True:
+        brightness_steps = 100  # Number of brightness levels in and out
+        for color in colors:
+            r, g, b = color.value
 
-        # Fade in
-        for i in range(brightness_steps):
-            factor = i / brightness_steps
-            for j in range(NUM_LEDS):
-                pixels[j] = (int(r * factor), int(g * factor), int(b * factor))
-            pixels.show()
-            time.sleep(speed)
+            # Fade in
+            for i in range(brightness_steps):
+                factor = i / brightness_steps
+                for j in range(NUM_LEDS):
+                    pixels[j] = (int(r * factor), int(g * factor), int(b * factor))
+                pixels.show()
+                time.sleep(speed)
 
-        # Fade out
-        for i in range(brightness_steps, -1, -1):
-            factor = i / brightness_steps
-            for j in range(NUM_LEDS):
-                pixels[j] = (int(r * factor), int(g * factor), int(b * factor))
-            pixels.show()
-            time.sleep(speed)
+            # Fade out
+            for i in range(brightness_steps, -1, -1):
+                factor = i / brightness_steps
+                for j in range(NUM_LEDS):
+                    pixels[j] = (int(r * factor), int(g * factor), int(b * factor))
+                pixels.show()
+                time.sleep(speed)
 
 
 breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)

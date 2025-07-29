@@ -1,6 +1,7 @@
 import time
 import board
 import neopixel
+from hdmi import get_average_screen_color
 from enum import Enum
 
 NUM_LEDS = 123
@@ -74,4 +75,6 @@ def breathing(colors, speed):
                 time.sleep(speed)
 
 
-breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
+#breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
+color = get_average_screen_color(1000)
+solid(color)

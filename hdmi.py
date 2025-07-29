@@ -10,7 +10,7 @@ if not cap.isOpened():
 
 sample_points = []
 
-def init_sample_points(sample_count=50):
+def init_sample_points(sample_count=150):
     """Initialize evenly spaced sample points based on desired count."""
     global sample_points
     ret, frame = cap.read()

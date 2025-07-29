@@ -52,6 +52,11 @@ def solid(r, g, b):
         pixels[i] = (r, g, b)
     pixels.show()
 
+def solid(color):
+    for i in range(NUM_LEDS):
+        pixels[i] = color
+    pixels.show()
+
 def breathing(colors, speed):
     while True:
         brightness_steps = 100  # Number of brightness levels in and out

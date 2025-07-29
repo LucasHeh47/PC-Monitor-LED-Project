@@ -8,30 +8,39 @@ cap = cv2.VideoCapture(0)
 if not cap.isOpened():
     raise Exception("Could not open HDMI capture device")
 
-def get_average_screen_color(sample_count=50, spread=50):
+sample_points = []
+
+def init_sample_points(rows=5, cols=5):
+    """Generate evenly spaced pixel positions across the screen."""
+    global sample_points
+    ret, frame = cap.read()
+    if not ret:
+        raise Exception("Failed to grab frame during init")
+
+    height, width, _ = frame.shape
+    y_spacing = height // (rows + 1)
+    x_spacing = width // (cols + 1)
+
+    sample_points = [
+        (y_spacing * (r + 1), x_spacing * (c + 1))
+        for r in range(rows)
+        for c in range(cols)
+    ]
+
+def get_average_screen_color():
+    if not sample_points:
+        init_sample_points()
+
     ret, frame = cap.read()
     if not ret:
         print("Failed to grab frame")
         return (0, 0, 0)
 
-    height, width, _ = frame.shape
+    pixels = [frame[y, x] for y, x in sample_points]
 
-    # Random center point
-    center_y = random.randint(spread, height - spread - 1)
-    center_x = random.randint(spread, width - spread - 1)
-
-    pixels = []
-    for _ in range(sample_count):
-        dy = random.randint(-spread, spread)
-        dx = random.randint(-spread, spread)
-        y = min(max(center_y + dy, 0), height - 1)
-        x = min(max(center_x + dx, 0), width - 1)
-        pixels.append(frame[y, x])
-
-    # Convert from BGR to RGB and average
+    # Convert BGR to RGB
     rgb_pixels = [tuple(reversed(p)) for p in pixels]
     avg_color = tuple(int(np.mean([p[i] for p in rgb_pixels])) for i in range(3))
-
     return avg_color
 
 # Optional: clean up

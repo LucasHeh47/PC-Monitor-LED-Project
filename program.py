@@ -115,4 +115,4 @@ def snake_animation(colors, length, delay=0.05):
 # except KeyboardInterrupt:
 #     release_capture()
 
-snake_animation([(255, 0, 0), (0, 255, 0), (0, 0, 255)], length=12)
+snake_animation([Color.BLUE], length=12)

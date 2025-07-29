@@ -1,7 +1,7 @@
 import time
 import board
 import neopixel
-from hdmi import get_average_screen_color
+from hdmi import get_average_screen_color, init_sample_points, release_capture
 from enum import Enum
 
 NUM_LEDS = 123
@@ -81,7 +81,10 @@ def breathing(colors, speed):
 
 
 #breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
-while True:
-    color = get_average_screen_color(100)
-    solid(color)
-    time.sleep(0.05)
+try:
+    init_sample_points(sample_count=200)  # Sample 36 evenly spaced pixels
+    while True:
+        color = get_average_screen_color()
+        print("Avg Color:", color)
+except KeyboardInterrupt:
+    release_capture()

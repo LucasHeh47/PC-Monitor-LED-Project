@@ -9,7 +9,7 @@ if not cap.isOpened():
     raise Exception("Could not open HDMI capture device")
 
 def get_average_screen_color(num_samples=100, max_offset=50):
-    cap = cv2.VideoCapture("/dev/video0", cv2.CAP_V4L2)
+    cap = cv2.VideoCapture("/dev/video1", cv2.CAP_V4L2)
     if not cap.isOpened():
         print("Cannot open HDMI capture device")
         return (0, 0, 0)

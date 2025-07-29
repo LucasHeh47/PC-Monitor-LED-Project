@@ -81,5 +81,7 @@ def breathing(colors, speed):
 
 
 #breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
-color = get_average_screen_color(1000)
-solid(color)
+while True:
+    color = get_average_screen_color(1000)
+    solid(color)
+    time.sleep(0.5)

@@ -96,8 +96,12 @@ def snake_animation(colors, length, delay=0.05):
             # Draw snake
             for j in range(length):
                 pos = i - j
-                if 0 <= pos < NUM_LEDS:
+                if j == 0 and pos == NUM_LEDS:
+                    pos = 0
+                if 0 <= pos:
                     r, g, b = snake_colors[j]
+                    if pos > NUM_LEDS:
+                        pos -= NUM_LEDS
                     pixels[pos] = (r, g, b)
 
             pixels.show()

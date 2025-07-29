@@ -80,30 +80,29 @@ def breathing(colors, speed):
                 time.sleep(speed)
 
 def snake_animation(colors, length, delay=0.05):
+    num_colors = len(colors)
+    heads = [(i * NUM_LEDS) // num_colors for i in range(num_colors)]  # even spacing
+
     while True:
-        snake_colors = []
-    
-        # Repeat or trim the colors to match the desired snake length
-        while len(snake_colors) < length:
-            snake_colors.extend(colors)
-        snake_colors = snake_colors[:length]
+        # Clear strip
+        for i in range(NUM_LEDS):
+            pixels[i] = (0, 0, 0)
 
-        head = 0  # current snake head position
+        # Draw each snake
+        for snake_index, color in enumerate(colors):
+            head = heads[snake_index]
+            r, g, b = color
 
-        while True:
-            # Clear strip
-            for i in range(NUM_LEDS):
-                pixels[i] = (0, 0, 0)
-
-            # Draw snake from head backwards
             for i in range(length):
                 pos = (head - i) % NUM_LEDS
-                r, g, b = snake_colors[i]
                 pixels[pos] = (r, g, b)
 
-            pixels.show()
-            time.sleep(delay)
-            head = (head + 1) % NUM_LEDS
+            # Move head forward
+            heads[snake_index] = (head + 1) % NUM_LEDS
+
+        pixels.show()
+        time.sleep(delay)
+
 
 
 
@@ -118,4 +117,4 @@ def snake_animation(colors, length, delay=0.05):
 # except KeyboardInterrupt:
 #     release_capture()
 
-snake_animation([Color.BLUE.value], length=12)
+snake_animation([Color.BLUE.value, Color.RED.value], length=10)

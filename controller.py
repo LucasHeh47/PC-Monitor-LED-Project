@@ -11,7 +11,7 @@ class Color(Enum):
     YELLOW  = (255, 255, 0)
     CYAN    = (0, 255, 255)
     MAGENTA = (255, 0, 255)
-    ORANGE  = (255, 165, 0)
+    ORANGE  = (255, 80, 0)
     PURPLE  = (128, 0, 128)
     PINK    = (255, 105, 180)
     TEAL    = (0, 128, 128)
@@ -21,7 +21,8 @@ PORT = 8888
 
 data = {
     "animation": "breathing",
-    "colors": [f"{Color.CYAN.name}", "teal", "blue"]
+    "colors": ["red", "orange", "yellow", "green", "blue", "purple"],
+    "speed": 0.01
 }
 
 def main():

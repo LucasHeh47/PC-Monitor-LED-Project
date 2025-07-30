@@ -185,36 +185,6 @@ def generate_led_positions(screen_width, screen_height):
 
 
 def handle_JSON(json):
-    global animating
-
-    if "animation" not in json or "colors" not in json:
-        print("Missing 'animation' or 'colors' field in JSON")
-        return
-
-    animating = False
-
-    animation_type = json["animation"]
-    color_names = json["colors"]
-
-    # Convert color names to RGB tuples
-    try:
-        color_values = [Color[name.upper()].value for name in color_names]
-    except KeyError as e:
-        print(f"Invalid color name: {e}")
-        return
-
-    if animation_type == "solid":
-        solid(color_values[0])  # Only one color used
-    elif animation_type == "breathing":
-        speed = float(json.get("speed", 0.05))
-        breathing([Color(name.upper()) for name in color_names], speed)
-    elif animation_type == "snake":
-        speed = float(json.get("speed", 0.05))
-        snake_animation(color_values, length=10, delay=speed)
-    else:
-        print(f"Unknown animation type: {animation_type}")
-
-def handle_JSON(json):
     global animating, animation_thread
 
     if "animation" not in json or "colors" not in json:
@@ -247,6 +217,37 @@ def handle_JSON(json):
         animation_thread.start()
     else:
         print(f"Unknown animation type: {animation_type}")
+
+
+def json_listener_thread(port=8888):
+    global animating
+
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(("0.0.0.0", port))
+    server.listen(1)
+    print(f"Listening for JSON on port {port}...")
+
+    while True:
+        client, addr = server.accept()
+        data = b""
+        while True:
+            chunk = client.recv(4096)
+            if not chunk:
+                break
+            data += chunk
+
+        try:
+            # Directly decode raw JSON data
+            json_data = json.loads(data.decode('utf-8'))
+            print("Received JSON:")
+            print(json_data)
+            handle_JSON(json_data)
+        except json.JSONDecodeError as e:
+            print("Received invalid JSON")
+            print("Error:", e)
+        finally:
+            client.close()
+
 
 def stop_animation():
     global animating, animation_thread

@@ -22,8 +22,9 @@ PORT = 8888
 
 data = {
     "animation": "snake",
-    "colors": ["blue", "red", "green"],
-    "speed": 0.001
+    "colors": ["blue", "red", "green", "yellow"],
+    "speed": 0.005,
+    "length": 5
 }
 
 def main():

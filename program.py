@@ -140,6 +140,18 @@ def snake_animation(colors, length, delay=0.05):
         pixels.show()
         time.sleep(delay)
 
+def average_screen_color():
+    global animating
+    animating = True
+    while animating:
+        try:
+            init_sample_points(sample_count=200)
+            while True:
+                color = get_average_screen_color()
+                solid(color)
+        except KeyboardInterrupt:
+            release_capture()
+
 def generate_led_positions(screen_width, screen_height):
     positions = []
 
@@ -205,6 +217,11 @@ def handle_JSON(json):
             snake_animation(color_values, length=int(json.get("length", 10)), delay=float(json.get("speed", 0.05)))
         animation_thread = threading.Thread(target=run_snake)
         animation_thread.start()
+    elif animation_type == "average_screen_color":
+        def run_avg_screen_color():
+            average_screen_color()
+        animation_thread = threading.Thread(target=run_avg_screen_color())
+        animation_thread.start()
     else:
         print(f"Unknown animation type: {animation_type}")
 
@@ -247,14 +264,6 @@ def stop_animation():
 
 
 #breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
-
-# try:
-#     init_sample_points(sample_count=200)
-#     while True:
-#         color = get_average_screen_color()
-#         solid(color)
-# except KeyboardInterrupt:
-#     release_capture()
 
 # led_positions = generate_led_positions(2560, 1440)
 #

@@ -56,5 +56,6 @@ class Color:
     def has(cls, name):
         return name.upper() in cls._predefined or name.upper() in cls._custom
 
-def __class_getitem__(cls, name):
-    return cls.get(name)
+    @classmethod
+    def __class_getitem__(cls, name):
+        return cls.get(name)

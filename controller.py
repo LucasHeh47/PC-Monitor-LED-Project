@@ -13,7 +13,7 @@ class Color(Enum):
     MAGENTA = (255, 0, 255)
     ORANGE  = (255, 80, 0)
     PURPLE  = (128, 0, 128)
-    VIOLET  = (128, 0, 256)
+    VIOLET  = (128, 0, 255)
     PINK    = (255, 105, 180)
     TEAL    = (0, 128, 128)
 

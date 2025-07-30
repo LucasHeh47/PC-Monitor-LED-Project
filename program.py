@@ -207,22 +207,22 @@ def json_listener_thread(port=8888):
 
 #breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
 
-# try:
-#     init_sample_points(sample_count=200)
-#     while True:
-#         color = get_average_screen_color()
-#         solid(color)
-# except KeyboardInterrupt:
-#     release_capture()
+try:
+    init_sample_points(sample_count=200)
+    while True:
+        color = get_average_screen_color()
+        solid(color)
+except KeyboardInterrupt:
+    release_capture()
 
 #listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
 #listener_thread.start()
 
 #snake_animation([Color.BLUE.value, Color.RED.value, Color.GREEN.value, Color.YELLOW.value], length=10)
 
-light_sides({
-    "top": Color.BLUE,
-    "bottom": Color.BLUE,
-    "left": Color.RED,
-    "right": Color.RED
-})
+# light_sides({
+#     "top": Color.BLUE,
+#     "bottom": Color.BLUE,
+#     "left": Color.RED,
+#     "right": Color.RED
+# })

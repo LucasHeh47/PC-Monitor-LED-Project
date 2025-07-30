@@ -192,6 +192,7 @@ def handle_JSON(json):
 
     # Stop previous animation
     stop_animation()
+    print("Stopped previous animation")
 
     animation_type = json["animation"]
     color_names = json["colors"]
@@ -201,6 +202,8 @@ def handle_JSON(json):
     except KeyError as e:
         print(f"Invalid color name: {e}")
         return
+
+    print(f"Starting new animation of: {animation_type} with colors: {color_names}")
 
     if animation_type == "solid":
         def run_solid():

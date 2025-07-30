@@ -4,13 +4,13 @@ import board
 import neopixel
 import socket
 import json
-from hdmi import get_average_screen_color, init_sample_points, release_capture
+from hdmi import get_average_screen_color, init_sample_points, release_capture, get_all_led_colors
 from enum import Enum
 
 NUM_LEDS = 123
 LEFT_LEDS = 23
 TOP_LEDS = 39
-RIGHT_LEDS = 21
+RIGHT_LEDS = 20
 BOTTOM_LEDS = 41
 
 animating = False
@@ -143,6 +143,36 @@ def snake_animation(colors, length, delay=0.05):
         pixels.show()
         time.sleep(delay)
 
+def generate_led_positions(screen_width, screen_height):
+    positions = []
+
+    # Bottom (starts bottom-left)
+    for i in range(BOTTOM_LEDS):
+        x = int((i / BOTTOM_LEDS) * screen_width)
+        y = screen_height - 1
+        positions.append((x, y))
+
+    # Right (bottom to top)
+    for i in range(RIGHT_LEDS):
+        x = screen_width - 1
+        y = int(screen_height - (i / RIGHT_LEDS) * screen_height)
+        positions.append((x, y))
+
+    # Top (right to left)
+    for i in range(TOP_LEDS):
+        x = int(screen_width - (i / TOP_LEDS) * screen_width)
+        y = 0
+        positions.append((x, y))
+
+    # Left (top to bottom)
+    for i in range(LEFT_LEDS):
+        x = 0
+        y = int((i / LEFT_LEDS) * screen_height)
+        positions.append((x, y))
+
+    return positions
+
+
 def handle_JSON(json):
     global animating
 
@@ -207,13 +237,22 @@ def json_listener_thread(port=8888):
 
 #breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
 
-try:
-    init_sample_points(sample_count=200)
-    while True:
-        color = get_average_screen_color()
-        solid(color)
-except KeyboardInterrupt:
-    release_capture()
+# try:
+#     init_sample_points(sample_count=200)
+#     while True:
+#         color = get_average_screen_color()
+#         solid(color)
+# except KeyboardInterrupt:
+#     release_capture()
+
+led_positions = generate_led_positions(2560, 1440)
+
+while True:
+    colors = get_all_led_colors(led_positions)
+    for i in range(NUM_LEDS):
+        pixels[i] = colors[i]
+    pixels.show()
+    time.sleep(0.05)
 
 #listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
 #listener_thread.start()

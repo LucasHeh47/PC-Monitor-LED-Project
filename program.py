@@ -7,6 +7,8 @@ import json
 from hdmi import get_average_screen_color, init_sample_points, release_capture, get_all_led_colors
 from controller import Color
 
+version = "1.0.0"
+
 NUM_LEDS = 123
 LEFT_LEDS = 23
 TOP_LEDS = 39
@@ -262,7 +264,7 @@ def stop_animation():
 #         pixels[i] = colors[i]
 #     pixels.show()
 #     time.sleep(0.05)
-
+print("V-", version)
 listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
 listener_thread.start()
 

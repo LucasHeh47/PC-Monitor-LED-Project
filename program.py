@@ -14,6 +14,8 @@ RIGHT_LEDS = 20
 BOTTOM_LEDS = 41
 
 animating = False
+animation_thread = None
+
 
 class Color(Enum):
     RED     = (255, 0, 0)
@@ -212,34 +214,46 @@ def handle_JSON(json):
     else:
         print(f"Unknown animation type: {animation_type}")
 
-def json_listener_thread(port=8888):
-    global animating
+def handle_JSON(json):
+    global animating, animation_thread
 
-    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    server.bind(("0.0.0.0", port))
-    server.listen(1)
-    print(f"Listening for JSON on port {port}...")
+    if "animation" not in json or "colors" not in json:
+        print("Missing 'animation' or 'colors' field in JSON")
+        return
 
-    while True:
-        client, addr = server.accept()
-        data = b""
-        while True:
-            chunk = client.recv(4096)
-            if not chunk:
-                break
-            data += chunk
+    # Stop previous animation
+    stop_animation()
 
-        try:
-            # Directly decode raw JSON data
-            json_data = json.loads(data.decode('utf-8'))
-            print("Received JSON:")
-            print(json_data)
-            handle_JSON(json_data)
-        except json.JSONDecodeError as e:
-            print("Received invalid JSON")
-            print("Error:", e)
-        finally:
-            client.close()
+    animation_type = json["animation"]
+    color_names = json["colors"]
+
+    try:
+        color_values = [Color[name.upper()].value for name in color_names]
+    except KeyError as e:
+        print(f"Invalid color name: {e}")
+        return
+
+    if animation_type == "solid":
+        solid(color_values[0])
+    elif animation_type == "breathing":
+        def run_breathing():
+            breathing([Color(name.upper()) for name in color_names], float(json.get("speed", 0.05)))
+        animation_thread = threading.Thread(target=run_breathing)
+        animation_thread.start()
+    elif animation_type == "snake":
+        def run_snake():
+            snake_animation(color_values, length=10, delay=float(json.get("speed", 0.05)))
+        animation_thread = threading.Thread(target=run_snake)
+        animation_thread.start()
+    else:
+        print(f"Unknown animation type: {animation_type}")
+
+def stop_animation():
+    global animating, animation_thread
+    animating = False
+    if animation_thread and animation_thread.is_alive():
+        animation_thread.join()
+
 
 #breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
 
@@ -263,7 +277,7 @@ def json_listener_thread(port=8888):
 listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
 listener_thread.start()
 
-snake_animation([Color.BLUE.value, Color.RED.value, Color.BLUE.value, Color.RED.value], length=20)
+#snake_animation([Color.BLUE.value, Color.RED.value, Color.BLUE.value, Color.RED.value], length=20)
 
 # light_sides({
 #     "top": Color.BLUE,

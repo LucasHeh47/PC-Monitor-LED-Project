@@ -150,15 +150,27 @@ def json_listener_thread(port=8888):
 
     while True:
         client, addr = server.accept()
-        data = client.recv(1024).decode()
+        data = b""
+        while True:
+            chunk = client.recv(4096)
+            if not chunk:
+                break
+            data += chunk
+
         try:
-            json_data = json.loads(data)
-            print("Received JSON: ")
+            # Decode and split HTTP headers from body
+            request = data.decode('utf-8')
+            body = request.split("\r\n\r\n", 1)[1]
+
+            json_data = json.loads(body)
+            print("Received JSON:")
             print(json_data)
             handle_JSON(json_data)
-        except json.JSONDecodeError:
+        except (IndexError, json.JSONDecodeError) as e:
             print("Received invalid JSON")
-        client.close()
+            print("Error:", e)
+        finally:
+            client.close()
 
 #breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
 

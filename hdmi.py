@@ -73,36 +73,6 @@ def get_average_screen_color(offset=20):
     avg_color = tuple(int(np.mean([p[i] for p in rgb_pixels])) for i in range(3))
     return avg_color
 
-def build_led_sample_map(led_positions, center, samples_per_led=5, offset=20):
-    """
-    For each LED position, precompute triangle-based sample points toward the center.
-    This is done only once and reused to prevent flickering.
-    """
-    sample_map = []
-
-    for led_pos in led_positions:
-        triangle_points = []
-
-        for _ in range(samples_per_led):
-            t = random.random()
-            u = random.random() * (1 - t)
-            v = 1 - t - u
-
-            x = int(t * center[0] + u * led_pos[0] + v * ((led_pos[0] + center[0]) // 2))
-            y = int(t * center[1] + u * led_pos[1] + v * ((led_pos[1] + center[1]) // 2))
-
-            triangle_points.append((y, x))
-
-            # Add 4 directional offsets
-            for dx, dy in [(-offset, 0), (offset, 0), (0, -offset), (0, offset)]:
-                sx, sy = x + dx, y + dy
-                triangle_points.append((sy, sx))
-
-        sample_map.append(triangle_points)
-
-    return sample_map
-
-
 
 def sample_triangle_pixels(frame, led_pos, center, num_samples=40, offset=20):
     """
@@ -132,26 +102,26 @@ def sample_triangle_pixels(frame, led_pos, center, num_samples=40, offset=20):
 
     return pixels
 
-def get_all_led_colors_from_map(frame, led_sample_map):
+def get_all_led_colors(led_positions, samples_per_led=40):
+    ret, frame = cap.read()
+    if not ret:
+        print("Failed to grab frame")
+        return [(0, 0, 0)] * len(led_positions)
+
     height, width, _ = frame.shape
+    center = (width // 2, height // 2)
     all_colors = []
 
-    for samples in led_sample_map:
-        valid_pixels = [
-            frame[y, x] for x, y in samples
-            if 0 <= x < width and 0 <= y < height
-        ]
-
-        if valid_pixels:
-            rgb_pixels = [tuple(reversed(p)) for p in valid_pixels]
+    for led in led_positions:
+        pixels = sample_triangle_pixels(frame, led, center, num_samples=samples_per_led)
+        if pixels:
+            rgb_pixels = [tuple(reversed(p)) for p in pixels]  # BGR to RGB
             avg_color = tuple(int(np.mean([p[i] for p in rgb_pixels])) for i in range(3))
         else:
             avg_color = (0, 0, 0)
-
         all_colors.append(avg_color)
 
     return all_colors
-
 
 
 

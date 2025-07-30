@@ -75,7 +75,7 @@ app = ttk.Window("LED Controller", themename="cosmo", size=(500, 650))
 app.place_window_center()
 
 ttk.Label(app, text="Animation Type").pack(pady=5)
-animation = ttk.Combobox(app, values=["solid", "breathing", "snake"])
+animation = ttk.Combobox(app, values=["solid", "breathing", "snake", "average_screen_color"])
 animation.set("solid")
 animation.pack(fill=tk.X, padx=20)
 

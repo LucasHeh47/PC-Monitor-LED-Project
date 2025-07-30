@@ -73,6 +73,13 @@ def get_average_screen_color(offset=20):
     avg_color = tuple(int(np.mean([p[i] for p in rgb_pixels])) for i in range(3))
     return avg_color
 
+def get_average_screen_color_fast():
+    ret, frame = cap.read()
+    avg_color = cv2.resize(frame, (1, 1), interpolation=cv2.INTER_AREA)
+    # Extract RGB tuple (OpenCV is BGR by default)
+    b, g, r = avg_color[0, 0]
+    return int(r), int(g), int(b)
+
 
 def sample_triangle_pixels(frame, led_pos, center, num_samples=40, offset=20):
     """

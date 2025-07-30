@@ -3,7 +3,6 @@ import json
 from tkinter import colorchooser
 import tkinter as tk
 import ttkbootstrap as ttk
-from ttkbootstrap.constants import *
 from color import Color
 
 HOST = "10.0.55.50"

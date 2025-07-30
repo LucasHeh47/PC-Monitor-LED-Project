@@ -4,7 +4,7 @@ import board
 import neopixel
 import socket
 import json
-from hdmi import get_average_screen_color, init_sample_points, release_capture, get_all_led_colors
+from hdmi import get_average_screen_color, init_sample_points, release_capture
 from color import Color
 
 version = "1.0.0"

@@ -153,6 +153,8 @@ def json_listener_thread(port=8888):
         data = client.recv(1024).decode()
         try:
             json_data = json.loads(data)
+            print("Received JSON: ")
+            print(json_data)
             handle_JSON(json_data)
         except json.JSONDecodeError:
             print("Received invalid JSON")

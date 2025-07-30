@@ -5,7 +5,7 @@ import neopixel
 import socket
 import json
 from hdmi import get_average_screen_color, init_sample_points, release_capture, get_all_led_colors
-from controller import Color
+from color import Color
 
 version = "1.0.0"
 
@@ -198,7 +198,7 @@ def handle_JSON(json):
     color_names = json["colors"]
 
     try:
-        color_values = [Color[name.upper()].value for name in color_names]
+        color_values = [Color[name].value if hasattr(Color[name], "value") else Color[name] for name in color_names]
     except KeyError as e:
         print(f"Invalid color name: {e}")
         return
@@ -276,6 +276,8 @@ def stop_animation():
 #     pixels.show()
 #     time.sleep(0.05)
 print("V-", version)
+Color.load_custom_colors()
+
 listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
 listener_thread.start()
 

@@ -86,6 +86,7 @@ def breathing(colors, speed):
                 time.sleep(speed)
 
 def light_side(side: str, color):
+    animating = True
     while animating:
         # Use .value if using Color enum
         if isinstance(color, Color):
@@ -104,10 +105,6 @@ def light_side(side: str, color):
             "right":  range(right_start, bottom_start),
             "bottom": range(bottom_start, NUM_LEDS),
         }
-
-        # Clear all LEDs first
-        for i in range(NUM_LEDS):
-            pixels[i] = (0, 0, 0)
 
         # Light the specified side
         if side in side_ranges:

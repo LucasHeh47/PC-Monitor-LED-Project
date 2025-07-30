@@ -5,7 +5,7 @@ import neopixel
 import socket
 import json
 from hdmi import get_average_screen_color, init_sample_points, release_capture, get_all_led_colors
-from enum import Enum
+from controller import Color
 
 NUM_LEDS = 123
 LEFT_LEDS = 23
@@ -15,22 +15,6 @@ BOTTOM_LEDS = 41
 
 animating = False
 animation_thread = None
-
-
-class Color(Enum):
-    RED     = (255, 0, 0)
-    GREEN   = (0, 255, 0)
-    BLUE    = (0, 0, 255)
-    WHITE   = (255, 255, 255)
-    BLACK   = (0, 0, 0)
-    YELLOW  = (255, 255, 0)
-    CYAN    = (0, 255, 255)
-    MAGENTA = (255, 0, 255)
-    ORANGE  = (255, 165, 0)
-    PURPLE  = (128, 0, 128)
-    PINK    = (255, 105, 180)
-    TEAL    = (0, 128, 128)
-
 
 pixels = neopixel.NeoPixel(board.D18, NUM_LEDS, auto_write=False)
 

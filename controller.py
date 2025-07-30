@@ -1,12 +1,27 @@
 import socket
 import json
+from enum import Enum
+
+class Color(Enum):
+    RED     = (255, 0, 0)
+    GREEN   = (0, 255, 0)
+    BLUE    = (0, 0, 255)
+    WHITE   = (255, 255, 255)
+    BLACK   = (0, 0, 0)
+    YELLOW  = (255, 255, 0)
+    CYAN    = (0, 255, 255)
+    MAGENTA = (255, 0, 255)
+    ORANGE  = (255, 165, 0)
+    PURPLE  = (128, 0, 128)
+    PINK    = (255, 105, 180)
+    TEAL    = (0, 128, 128)
 
 HOST = "10.0.55.50"
 PORT = 8888
 
 data = {
     "animation": "solid",
-    "colors": ["red"]
+    "colors": [f"{Color.CYAN.name}"]
 }
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

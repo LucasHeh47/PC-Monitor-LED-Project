@@ -148,7 +148,9 @@ def average_screen_color():
             init_sample_points(sample_count=200)
             while True:
                 color = get_average_screen_color()
-                solid(color)
+                for i in range(NUM_LEDS):
+                    pixels[i] = color
+                pixels.show()
         except KeyboardInterrupt:
             release_capture()
 

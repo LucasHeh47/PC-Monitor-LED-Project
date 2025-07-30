@@ -21,7 +21,7 @@ HOST = "10.0.55.50"
 PORT = 8888
 
 data = {
-    "animation": "snake",
+    "animation": "average_screen_color",
     "colors": ["blue", "red", "green", "yellow"],
     "speed": 0.005,
     "length": 5

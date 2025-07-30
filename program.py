@@ -85,6 +85,37 @@ def breathing(colors, speed):
                 pixels.show()
                 time.sleep(speed)
 
+def light_side(side: str, color):
+    # Use .value if using Color enum
+    if isinstance(color, Color):
+        color = color.value
+
+    # Define segment start indices
+    left_start = 0
+    top_start = left_start + LEFT_LEDS
+    right_start = top_start + TOP_LEDS
+    bottom_start = right_start + RIGHT_LEDS
+
+    # Map each side to its range of LED indices
+    side_ranges = {
+        "left":   range(left_start, top_start),
+        "top":    range(top_start, right_start),
+        "right":  range(right_start, bottom_start),
+        "bottom": range(bottom_start, NUM_LEDS),
+    }
+
+    # Clear all LEDs first
+    for i in range(NUM_LEDS):
+        pixels[i] = (0, 0, 0)
+
+    # Light the specified side
+    if side in side_ranges:
+        for i in side_ranges[side]:
+            pixels[i] = color
+
+    pixels.show()
+
+
 def snake_animation(colors, length, delay=0.05):
     num_colors = len(colors)
     heads = [(i * NUM_LEDS) // num_colors for i in range(num_colors)]  # even spacing
@@ -181,7 +212,12 @@ def json_listener_thread(port=8888):
 #         solid(color)
 # except KeyboardInterrupt:
 #     release_capture()
-listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
-listener_thread.start()
 
-snake_animation([Color.BLUE.value, Color.RED.value, Color.GREEN.value, Color.YELLOW.value], length=10)
+#listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
+#listener_thread.start()
+
+#snake_animation([Color.BLUE.value, Color.RED.value, Color.GREEN.value, Color.YELLOW.value], length=10)
+
+light_side("top", (255, 0, 0))         # Red top
+light_side("left", Color.BLUE)         # Blue left using enum
+light_side("bottom", (0, 255, 0))      # Green bottom

@@ -257,11 +257,11 @@ def json_listener_thread(port=8888):
 #listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
 #listener_thread.start()
 
-snake_animation([Color.BLUE.value, Color.RED.value, Color.GREEN.value, Color.YELLOW.value], length=10)
+#snake_animation([Color.BLUE.value, Color.RED.value, Color.GREEN.value, Color.YELLOW.value], length=10)
 
-# light_sides({
-#     "top": Color.BLUE,
-#     "bottom": Color.BLUE,
-#     "left": Color.RED,
-#     "right": Color.RED
-# })
+light_sides({
+    "top": Color.BLUE,
+    "bottom": Color.BLUE,
+    "left": Color.RED,
+    "right": Color.RED
+})

@@ -223,7 +223,13 @@ def json_listener_thread(port=8888):
         try:
             # Decode and split HTTP headers from body
             request = data.decode('utf-8')
-            body = request.split("\r\n\r\n", 1)[1]
+            parts = request.split("\r\n\r\n", 1)
+            if len(parts) < 2:
+                print("Received invalid HTTP request (missing body)")
+                client.close()
+                continue
+
+            body = parts[1]
 
             json_data = json.loads(body)
             print("Received JSON:")

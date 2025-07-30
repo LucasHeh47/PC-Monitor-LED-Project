@@ -198,7 +198,8 @@ def handle_JSON(json):
     color_names = json["colors"]
 
     try:
-        color_values = [Color[name].value if hasattr(Color[name], "value") else Color[name] for name in color_names]
+        # These are ColorValue objects now
+        color_values = [Color[name] for name in color_names]
     except KeyError as e:
         print(f"Invalid color name: {e}")
         return
@@ -207,27 +208,30 @@ def handle_JSON(json):
 
     if animation_type == "solid":
         def run_solid():
-            solid(color_values[0])
-
+            solid(color_values[0].value)  # pass RGB tuple
         animation_thread = threading.Thread(target=run_solid)
-        animation_thread.start()
+
     elif animation_type == "breathing":
         def run_breathing():
-            breathing([Color[name.upper()] for name in color_names], float(json.get("speed", 0.05)))
+            breathing(color_values, float(json.get("speed", 0.05)))  # use ColorValue objects directly
         animation_thread = threading.Thread(target=run_breathing)
-        animation_thread.start()
+
     elif animation_type == "snake":
         def run_snake():
-            snake_animation(color_values, length=int(json.get("length", 10)), delay=float(json.get("speed", 0.05)))
+            rgb_values = [c.value for c in color_values]
+            snake_animation(rgb_values, length=int(json.get("length", 10)), delay=float(json.get("speed", 0.05)))
         animation_thread = threading.Thread(target=run_snake)
-        animation_thread.start()
+
     elif animation_type == "average_screen_color":
         def run_avg_screen_color():
             average_screen_color()
         animation_thread = threading.Thread(target=run_avg_screen_color)
-        animation_thread.start()
+
     else:
         print(f"Unknown animation type: {animation_type}")
+        return
+
+    animation_thread.start()
 
 
 def json_listener_thread(port=8888):

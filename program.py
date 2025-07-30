@@ -2,10 +2,10 @@ import threading
 import time
 import board
 import neopixel
+import socket
+import json
 from hdmi import get_average_screen_color, init_sample_points, release_capture
 from enum import Enum
-
-from listener import json_listener_thread
 
 NUM_LEDS = 123
 LEFT_LEDS = 23
@@ -140,7 +140,23 @@ def handle_JSON(json):
     else:
         print(f"Unknown animation type: {animation_type}")
 
+def json_listener_thread(port=8888):
+    global animating
 
+    server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server.bind(("0.0.0.0", port))
+    server.listen(1)
+    print(f"Listening for JSON on port {port}...")
+
+    while True:
+        client, addr = server.accept()
+        data = client.recv(1024).decode()
+        try:
+            json_data = json.loads(data)
+            handle_JSON(json_data)
+        except json.JSONDecodeError:
+            print("Received invalid JSON")
+        client.close()
 
 #breathing((Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW), 0.02)
 

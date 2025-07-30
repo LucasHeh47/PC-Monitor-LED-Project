@@ -24,7 +24,11 @@ data = {
     "colors": [f"{Color.CYAN.name}", "teal", "blue"]
 }
 
-with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-    s.connect((HOST, PORT))
-    s.sendall(json.dumps(data).encode('utf-8'))
-    s.shutdown(socket.SHUT_WR)  # Tell the server we're done sending
+def main():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+        s.connect((HOST, PORT))
+        s.sendall(json.dumps(data).encode('utf-8'))
+        s.shutdown(socket.SHUT_WR)  # Tell the server we're done sending
+
+if __name__ == "__main__":
+    main()

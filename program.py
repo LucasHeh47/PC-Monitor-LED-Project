@@ -290,3 +290,6 @@ listener_thread.start()
 #     "left": Color.RED,
 #     "right": Color.RED
 # })
+
+while True:
+    time.sleep(1)

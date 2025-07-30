@@ -202,7 +202,7 @@ def handle_JSON(json):
         animation_thread.start()
     elif animation_type == "snake":
         def run_snake():
-            snake_animation(color_values, length=10, delay=float(json.get("speed", 0.05)))
+            snake_animation(color_values, length=int(json.get("length", 10)), delay=float(json.get("speed", 0.05)))
         animation_thread = threading.Thread(target=run_snake)
         animation_thread.start()
     else:

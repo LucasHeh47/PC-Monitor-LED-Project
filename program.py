@@ -86,34 +86,35 @@ def breathing(colors, speed):
                 time.sleep(speed)
 
 def light_side(side: str, color):
-    # Use .value if using Color enum
-    if isinstance(color, Color):
-        color = color.value
+    while animating:
+        # Use .value if using Color enum
+        if isinstance(color, Color):
+            color = color.value
 
-    # Define segment start indices
-    left_start = 0
-    top_start = left_start + LEFT_LEDS
-    right_start = top_start + TOP_LEDS
-    bottom_start = right_start + RIGHT_LEDS
+        # Define segment start indices
+        left_start = 0
+        top_start = left_start + LEFT_LEDS
+        right_start = top_start + TOP_LEDS
+        bottom_start = right_start + RIGHT_LEDS
 
-    # Map each side to its range of LED indices
-    side_ranges = {
-        "left":   range(left_start, top_start),
-        "top":    range(top_start, right_start),
-        "right":  range(right_start, bottom_start),
-        "bottom": range(bottom_start, NUM_LEDS),
-    }
+        # Map each side to its range of LED indices
+        side_ranges = {
+            "left":   range(left_start, top_start),
+            "top":    range(top_start, right_start),
+            "right":  range(right_start, bottom_start),
+            "bottom": range(bottom_start, NUM_LEDS),
+        }
 
-    # Clear all LEDs first
-    for i in range(NUM_LEDS):
-        pixels[i] = (0, 0, 0)
+        # Clear all LEDs first
+        for i in range(NUM_LEDS):
+            pixels[i] = (0, 0, 0)
 
-    # Light the specified side
-    if side in side_ranges:
-        for i in side_ranges[side]:
-            pixels[i] = color
+        # Light the specified side
+        if side in side_ranges:
+            for i in side_ranges[side]:
+                pixels[i] = color
 
-    pixels.show()
+        pixels.show()
 
 
 def snake_animation(colors, length, delay=0.05):

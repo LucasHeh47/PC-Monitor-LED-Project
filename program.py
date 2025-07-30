@@ -4,7 +4,7 @@ import board
 import neopixel
 import socket
 import json
-from hdmi import get_average_screen_color, init_sample_points, release_capture
+from hdmi import get_average_screen_color, init_sample_points, release_capture, get_average_screen_color_fast
 from color import Color
 
 version = "1.0.0"
@@ -146,7 +146,7 @@ def average_screen_color():
     try:
         init_sample_points(sample_count=200)
         while animating:
-            color = get_average_screen_color()
+            color = get_average_screen_color_fast()
             for i in range(NUM_LEDS):
                 pixels[i] = color
             pixels.show()

@@ -13,6 +13,7 @@ class Color(Enum):
     MAGENTA = (255, 0, 255)
     ORANGE  = (255, 80, 0)
     PURPLE  = (128, 0, 128)
+    VIOLET  = (128, 0, 256)
     PINK    = (255, 105, 180)
     TEAL    = (0, 128, 128)
 
@@ -20,8 +21,8 @@ HOST = "10.0.55.50"
 PORT = 8888
 
 data = {
-    "animation": "breathing",
-    "colors": ["red", "orange", "yellow", "green", "blue", "purple"],
+    "animation": "snake",
+    "colors": ["red", "orange", "yellow", "green", "blue", "purple", "violet"],
     "speed": 0.01
 }
 

@@ -1,8 +1,11 @@
+import threading
 import time
 import board
 import neopixel
 from hdmi import get_average_screen_color, init_sample_points, release_capture
 from enum import Enum
+
+from listener import json_listener_thread
 
 NUM_LEDS = 123
 LEFT_LEDS = 23
@@ -10,6 +13,7 @@ TOP_LEDS = 39
 RIGHT_LEDS = 21
 BOTTOM_LEDS = 41
 
+animating = False
 
 class Color(Enum):
     RED     = (255, 0, 0)
@@ -39,7 +43,8 @@ def wheel(pos):
                 return (0, pos * 3, 255 - pos * 3)
 
 def rainbow():
-    while True:
+    animating = True
+    while animating:
             for j in range(255):
                     for i in range(NUM_LEDS):
                             pixel_index = (i * 256 // NUM_LEDS) + j
@@ -58,7 +63,8 @@ def solid(color):
     pixels.show()
 
 def breathing(colors, speed):
-    while True:
+    animating = True
+    while animating:
         brightness_steps = 100  # Number of brightness levels in and out
         for color in colors:
             r, g, b = color.value
@@ -83,7 +89,8 @@ def snake_animation(colors, length, delay=0.05):
     num_colors = len(colors)
     heads = [(i * NUM_LEDS) // num_colors for i in range(num_colors)]  # even spacing
 
-    while True:
+    animating = True
+    while animating:
         # Clear strip
         for i in range(NUM_LEDS):
             pixels[i] = (0, 0, 0)
@@ -103,7 +110,35 @@ def snake_animation(colors, length, delay=0.05):
         pixels.show()
         time.sleep(delay)
 
+def handle_JSON(json):
+    global animating
 
+    if "animation" not in json or "colors" not in json:
+        print("Missing 'animation' or 'colors' field in JSON")
+        return
+
+    animating = False
+
+    animation_type = json["animation"]
+    color_names = json["colors"]
+
+    # Convert color names to RGB tuples
+    try:
+        color_values = [Color[name.upper()].value for name in color_names]
+    except KeyError as e:
+        print(f"Invalid color name: {e}")
+        return
+
+    if animation_type == "solid":
+        solid(color_values[0])  # Only one color used
+    elif animation_type == "breathing":
+        speed = float(json.get("speed", 0.05))
+        breathing([Color(name.upper()) for name in color_names], speed)
+    elif animation_type == "snake":
+        speed = float(json.get("speed", 0.05))
+        snake_animation(color_values, length=10, delay=speed)
+    else:
+        print(f"Unknown animation type: {animation_type}")
 
 
 
@@ -116,5 +151,7 @@ def snake_animation(colors, length, delay=0.05):
 #         solid(color)
 # except KeyboardInterrupt:
 #     release_capture()
+listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
+listener_thread.start()
 
 snake_animation([Color.BLUE.value, Color.RED.value, Color.GREEN.value, Color.YELLOW.value], length=10)

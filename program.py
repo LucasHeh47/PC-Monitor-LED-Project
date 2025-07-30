@@ -204,7 +204,11 @@ def handle_JSON(json):
         return
 
     if animation_type == "solid":
-        solid(color_values[0])
+        def run_solid():
+            solid(color_values[0])
+
+        animation_thread = threading.Thread(target=run_solid)
+        animation_thread.start()
     elif animation_type == "breathing":
         def run_breathing():
             breathing([Color(name.upper()) for name in color_names], float(json.get("speed", 0.05)))

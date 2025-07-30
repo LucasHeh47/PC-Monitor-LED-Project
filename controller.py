@@ -6,7 +6,7 @@ PORT = 8888
 
 data = {
     "animation": "solid",
-    "colors": ["blue"]
+    "colors": ["red"]
 }
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

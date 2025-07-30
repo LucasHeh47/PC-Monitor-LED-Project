@@ -195,7 +195,7 @@ def handle_JSON(json):
         animation_thread.start()
     elif animation_type == "breathing":
         def run_breathing():
-            breathing([Color(name.upper()) for name in color_names], float(json.get("speed", 0.05)))
+            breathing([Color[name.upper()] for name in color_names], float(json.get("speed", 0.05)))
         animation_thread = threading.Thread(target=run_breathing)
         animation_thread.start()
     elif animation_type == "snake":

@@ -20,8 +20,8 @@ HOST = "10.0.55.50"
 PORT = 8888
 
 data = {
-    "animation": "solid",
-    "colors": [f"{Color.CYAN.name}"]
+    "animation": "breathing",
+    "colors": [f"{Color.CYAN.name}", "teal", "blue"]
 }
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

@@ -254,8 +254,8 @@ def json_listener_thread(port=8888):
 #     pixels.show()
 #     time.sleep(0.05)
 
-#listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
-#listener_thread.start()
+listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
+listener_thread.start()
 
 snake_animation([Color.BLUE.value, Color.RED.value, Color.BLUE.value, Color.RED.value], length=20)
 

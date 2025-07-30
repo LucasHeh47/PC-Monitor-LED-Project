@@ -85,33 +85,37 @@ def breathing(colors, speed):
                 pixels.show()
                 time.sleep(speed)
 
-def light_side(side: str, color):
-    animating = True
-    while animating:
-        # Use .value if using Color enum
-        if isinstance(color, Color):
-            color = color.value
+def light_sides(side_colors: dict):
+    # Use .value if using Color enum
+    def get_rgb(c):
+        return c.value if isinstance(c, Color) else c
 
-        # Define segment start indices
-        left_start = 0
-        top_start = left_start + LEFT_LEDS
-        right_start = top_start + TOP_LEDS
-        bottom_start = right_start + RIGHT_LEDS
+    # Define segment start indices
+    left_start = 0
+    top_start = left_start + LEFT_LEDS
+    right_start = top_start + TOP_LEDS
+    bottom_start = right_start + RIGHT_LEDS
 
-        # Map each side to its range of LED indices
-        side_ranges = {
-            "left":   range(left_start, top_start),
-            "top":    range(top_start, right_start),
-            "right":  range(right_start, bottom_start),
-            "bottom": range(bottom_start, NUM_LEDS),
-        }
+    # Map each side to its range of LED indices
+    side_ranges = {
+        "left":   range(left_start, top_start),
+        "top":    range(top_start, right_start),
+        "right":  range(right_start, bottom_start),
+        "bottom": range(bottom_start, NUM_LEDS),
+    }
 
-        # Light the specified side
+    # Clear all LEDs first
+    for i in range(NUM_LEDS):
+        pixels[i] = (0, 0, 0)
+
+    # Set colors for each specified side
+    for side, color in side_colors.items():
+        rgb = get_rgb(color)
         if side in side_ranges:
             for i in side_ranges[side]:
-                pixels[i] = color
+                pixels[i] = rgb
 
-        pixels.show()
+    pixels.show()
 
 
 def snake_animation(colors, length, delay=0.05):
@@ -216,6 +220,9 @@ def json_listener_thread(port=8888):
 
 #snake_animation([Color.BLUE.value, Color.RED.value, Color.GREEN.value, Color.YELLOW.value], length=10)
 
-light_side("top", (255, 0, 0))         # Red top
-light_side("left", Color.BLUE)         # Blue left using enum
-light_side("bottom", (0, 255, 0))      # Green bottom
+light_sides({
+    "top": Color.BLUE,
+    "bottom": Color.BLUE,
+    "left": Color.RED,
+    "right": Color.RED
+})

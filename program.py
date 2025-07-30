@@ -281,6 +281,8 @@ Color.load_custom_colors()
 listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
 listener_thread.start()
 
+Color.save_custom_colors()
+
 #snake_animation([Color.BLUE.value, Color.RED.value, Color.BLUE.value, Color.RED.value], length=20)
 
 # light_sides({

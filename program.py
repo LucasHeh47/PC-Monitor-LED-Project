@@ -4,7 +4,8 @@ import board
 import neopixel
 import socket
 import json
-from hdmi import get_average_screen_color, init_sample_points, release_capture, get_all_led_colors_from_map
+from hdmi import get_average_screen_color, init_sample_points, release_capture, get_all_led_colors_from_map, \
+    build_led_sample_map, cap
 from enum import Enum
 
 NUM_LEDS = 123
@@ -244,16 +245,24 @@ def json_listener_thread(port=8888):
 # except KeyboardInterrupt:
 #     release_capture()
 
-led_positions = generate_led_positions(2560, 1440)
-init_sample_points(sample_count=200)
+frame_height = 1440
+frame_width = 2560
+center = (frame_width // 2, frame_height // 2)
+
+led_positions = generate_led_positions(frame_width, frame_height)
+led_sample_map = build_led_sample_map(led_positions, center, samples_per_led=5)
 
 while True:
-    colors = get_all_led_colors_from_map(led_positions)
+    ret, frame = cap.read()
+    if not ret:
+        continue
 
+    colors = get_all_led_colors_from_map(frame, led_sample_map)
     for i in range(NUM_LEDS):
         pixels[i] = colors[i]
     pixels.show()
     time.sleep(0.05)
+
 
 #listener_thread = threading.Thread(target=json_listener_thread, daemon=True)
 #listener_thread.start()

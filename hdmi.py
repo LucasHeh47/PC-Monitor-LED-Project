@@ -73,6 +73,36 @@ def get_average_screen_color(offset=20):
     avg_color = tuple(int(np.mean([p[i] for p in rgb_pixels])) for i in range(3))
     return avg_color
 
+def build_led_sample_map(led_positions, center, samples_per_led=5, offset=20):
+    """
+    For each LED position, precompute triangle-based sample points toward the center.
+    This is done only once and reused to prevent flickering.
+    """
+    sample_map = []
+
+    for led_pos in led_positions:
+        triangle_points = []
+
+        for _ in range(samples_per_led):
+            t = random.random()
+            u = random.random() * (1 - t)
+            v = 1 - t - u
+
+            x = int(t * center[0] + u * led_pos[0] + v * ((led_pos[0] + center[0]) // 2))
+            y = int(t * center[1] + u * led_pos[1] + v * ((led_pos[1] + center[1]) // 2))
+
+            triangle_points.append((y, x))
+
+            # Add 4 directional offsets
+            for dx, dy in [(-offset, 0), (offset, 0), (0, -offset), (0, offset)]:
+                sx, sy = x + dx, y + dy
+                triangle_points.append((sy, sx))
+
+        sample_map.append(triangle_points)
+
+    return sample_map
+
+
 
 def sample_triangle_pixels(frame, led_pos, center, num_samples=40, offset=20):
     """

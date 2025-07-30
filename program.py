@@ -43,6 +43,7 @@ def wheel(pos):
                 return (0, pos * 3, 255 - pos * 3)
 
 def rainbow():
+    global animating
     animating = True
     while animating:
             for j in range(255):
@@ -53,16 +54,23 @@ def rainbow():
                     time.sleep(0.02)
 
 def solid(r, g, b):
-    for i in range(NUM_LEDS):
-        pixels[i] = (r, g, b)
-    pixels.show()
+    global animating
+    animating = True
+    while animating:
+        for i in range(NUM_LEDS):
+            pixels[i] = (r, g, b)
+        pixels.show()
 
 def solid(color):
-    for i in range(NUM_LEDS):
-        pixels[i] = color
-    pixels.show()
+    global animating
+    animating = True
+    while animating:
+        for i in range(NUM_LEDS):
+            pixels[i] = color
+        pixels.show()
 
 def breathing(colors, speed):
+    global animating
     animating = True
     while animating:
         brightness_steps = 100  # Number of brightness levels in and out
@@ -122,6 +130,7 @@ def snake_animation(colors, length, delay=0.05):
     num_colors = len(colors)
     heads = [(i * NUM_LEDS) // num_colors for i in range(num_colors)]  # even spacing
 
+    global animating
     animating = True
     while animating:
         # Clear strip

@@ -63,6 +63,7 @@ def breathing(colors, speed):
     while animating:
         brightness_steps = 100  # Number of brightness levels in and out
         for color in colors:
+            if not animating: return
             r, g, b = color.value
 
             # Fade in
@@ -220,6 +221,7 @@ def handle_JSON(json):
                 g = sum(c.value[1] for c in color_values) // len(color_values)
                 b = sum(c.value[2] for c in color_values) // len(color_values)
                 color = (r, g, b)
+            solid(color)
         animation_thread = threading.Thread(target=run_solid)
 
     elif animation_type == "breathing":

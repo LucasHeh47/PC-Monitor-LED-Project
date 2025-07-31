@@ -212,7 +212,14 @@ def handle_JSON(json):
 
     if animation_type == "solid":
         def run_solid():
-            solid(color_values[0].value)  # pass RGB tuple
+            if len(color_values) == 1:
+                color = color_values[0].value  # RGB tuple
+            else:
+                # Average the RGB values
+                r = sum(c.value[0] for c in color_values) // len(color_values)
+                g = sum(c.value[1] for c in color_values) // len(color_values)
+                b = sum(c.value[2] for c in color_values) // len(color_values)
+                color = (r, g, b)
         animation_thread = threading.Thread(target=run_solid)
 
     elif animation_type == "breathing":

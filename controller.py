@@ -3,7 +3,11 @@ import json
 from tkinter import colorchooser
 import tkinter as tk
 import ttkbootstrap as ttk
+
 from color import Color
+import os
+
+version = "1.1"
 
 HOST = "10.0.55.50"
 PORT = 8888
@@ -47,7 +51,7 @@ def submit():
 
 def add_color():
     selection = available_colors.get()
-    if selection and selection not in used_colorsbox.get(0, tk.END):
+    if selection:
         used_colorsbox.insert(tk.END, selection)
 
 def remove_color():
@@ -66,16 +70,24 @@ def create_custom_color():
         Color.add_custom_color(name, r, g, b)
         update_color_dropdown()
         available_colors.set(name)
+        data = {
+            "name": name,
+            "r": r,
+            "g": g,
+            "b": b
+        }
+        send_json(data)
 
 def update_color_dropdown():
     available_colors['values'] = [c.lower() for c in Color.all().keys()]
 
+
 # --- GUI Setup ---
-app = ttk.Window("LED Controller", themename="cosmo", size=(500, 650))
+app = ttk.Window(f"LED Controller v{version}", themename="cosmo", size=(500, 650))
 app.place_window_center()
 
 ttk.Label(app, text="Animation Type").pack(pady=5)
-animation = ttk.Combobox(app, values=["solid", "breathing", "snake", "average_screen_color"])
+animation = ttk.Combobox(app, values=["solid", "breathing", "snake", "average_screen_color", "rainbow"])
 animation.set("solid")
 animation.pack(fill=tk.X, padx=20)
 

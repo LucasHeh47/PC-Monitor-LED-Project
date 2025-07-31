@@ -4,10 +4,10 @@ import board
 import neopixel
 import socket
 import json
-from hdmi import get_average_screen_color, init_sample_points, release_capture, get_average_screen_color_fast
+from hdmi import release_capture, get_average_screen_color_fast
 from color import Color
 
-version = "1.0.0"
+version = "1.1"
 
 NUM_LEDS = 123
 LEFT_LEDS = 23
@@ -186,6 +186,11 @@ def generate_led_positions(screen_width, screen_height):
 def handle_JSON(json):
     global animating, animation_thread
 
+    if "add_color" in json:
+        Color.add_custom_color(json["name"], json["r"], json["g"], json["b"])
+        print(f"Adding color {json['name']} R:{json['r']} G:{json['g']} B:{json['b']}")
+        return
+
     if "animation" not in json or "colors" not in json:
         print("Missing 'animation' or 'colors' field in JSON")
         return
@@ -226,6 +231,11 @@ def handle_JSON(json):
         def run_avg_screen_color():
             average_screen_color()
         animation_thread = threading.Thread(target=run_avg_screen_color)
+
+    elif animation_type == "rainbow":
+        def run_rainbow():
+            rainbow()
+        animation_thread = threading.Thread(target=run_rainbow)
 
     else:
         print(f"Unknown animation type: {animation_type}")

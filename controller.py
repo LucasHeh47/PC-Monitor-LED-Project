@@ -60,6 +60,7 @@ def submit():
     colors = [used_colorsbox.get(i) for i in range(used_colorsbox.size())]
     speed_val = speed_entry.get()
     length_val = length_entry.get()
+    steps_val = steps_entry.get()
 
     try:
         speed = float(speed_val)
@@ -71,10 +72,16 @@ def submit():
     except ValueError:
         length = 10
 
+    try:
+        steps = int(length_val)
+    except ValueError:
+        steps = 100
+
     data = {
         "animation": anim,
         "colors": [c.lower() for c in colors],
-        "speed": speed
+        "speed": speed,
+        "steps": steps
     }
     if anim == "snake":
         data["length"] = length
@@ -263,15 +270,31 @@ if animation.get() not in ["rainbow", "average_screen_color"]:
 
     ttk.Button(app, text="❌ Remove Selected", bootstyle="danger", command=remove_color).pack(pady=5)
 
-    ttk.Label(app, text="Speed (float)").pack(pady=5)
-    speed_entry = ttk.Entry(app)
-    speed_entry.insert(0, "0.05")
-    speed_entry.pack(padx=20)
 
-    ttk.Label(app, text="Length (int, for snake)").pack(pady=5)
-    length_entry = ttk.Entry(app)
+
+    # Create a frame to hold the row
+    entry_row = ttk.Frame(app)
+    entry_row.pack(pady=10)
+
+    # Speed
+    ttk.Label(entry_row, text="Speed (float)").grid(row=0, column=0, padx=5)
+    speed_entry = ttk.Entry(entry_row, width=8)
+    speed_entry.insert(0, "0.05")
+    speed_entry.grid(row=1, column=0, padx=5)
+
+    # Length
+    ttk.Label(entry_row, text="Length (snake)").grid(row=0, column=1, padx=5)
+    length_entry = ttk.Entry(entry_row, width=8)
     length_entry.insert(0, "10")
-    length_entry.pack(padx=20)
+    length_entry.grid(row=1, column=1, padx=5)
+
+    # Steps
+    ttk.Label(entry_row, text="Steps (breathing)").grid(row=0, column=2, padx=5)
+    steps_entry = ttk.Entry(entry_row, width=8)
+    steps_entry.insert(0, "100")
+    steps_entry.grid(row=1, column=2, padx=5)
+
+
 
 # --- Custom Color Creator ---
 ttk.Label(app, text="Create Custom Color").pack(pady=10)

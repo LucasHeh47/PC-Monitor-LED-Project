@@ -57,11 +57,11 @@ def solid(color):
             pixels[i] = color
         pixels.show()
 
-def breathing(colors, speed):
+def breathing(colors, speed, steps):
     global animating
     animating = True
     while animating:
-        brightness_steps = 100  # Number of brightness levels in and out
+        brightness_steps = steps  # Number of brightness levels in and out
         for color in colors:
             if not animating: return
             r, g, b = color.value
@@ -226,7 +226,7 @@ def handle_JSON(json):
 
     elif animation_type == "breathing":
         def run_breathing():
-            breathing(color_values, float(json.get("speed", 0.05)))  # use ColorValue objects directly
+            breathing(color_values, float(json.get("speed", 0.05)), int(json.get("steps", 100)))  # use ColorValue objects directly
         animation_thread = threading.Thread(target=run_breathing)
 
     elif animation_type == "snake":

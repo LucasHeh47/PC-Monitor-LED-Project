@@ -144,7 +144,6 @@ def average_screen_color():
     global animating
     animating = True
     try:
-        init_sample_points(sample_count=200)
         while animating:
             color = get_average_screen_color_fast()
             for i in range(NUM_LEDS):
@@ -187,8 +186,8 @@ def handle_JSON(json):
     global animating, animation_thread
 
     if "add_color" in json:
-        Color.add_custom_color(json["name"], json["r"], json["g"], json["b"])
-        print(f"Adding color {json['name']} R:{json['r']} G:{json['g']} B:{json['b']}")
+        Color.add_custom_color(json["add_color"], json["r"], json["g"], json["b"])
+        print(f"Adding color {json['add_color']} R:{json['r']} G:{json['g']} B:{json['b']}")
         return
 
     if "animation" not in json or "colors" not in json:

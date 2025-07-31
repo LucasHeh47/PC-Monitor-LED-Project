@@ -71,7 +71,7 @@ def create_custom_color():
         update_color_dropdown()
         available_colors.set(name)
         data = {
-            "name": name,
+            "add_color": name,
             "r": r,
             "g": g,
             "b": b

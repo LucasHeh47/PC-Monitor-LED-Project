@@ -252,13 +252,15 @@ def handle_JSON(json):
 
     elif animation_type == "sides":
         def run_sides():
-            light_sides({
-                # colors 1 2 3 and 4 are left top right bottom
-                "left": color_names[0],
-                "top": color_names[1],
-                "right": color_names[2],
-                "bottom": color_names[3]
-            })
+            try:
+                light_sides({
+                    "left": Color[color_names[0]],
+                    "top": Color[color_names[1]],
+                    "right": Color[color_names[2]],
+                    "bottom": Color[color_names[3]]
+                })
+            except KeyError as e:
+                print(f"[error] Invalid side color: {e}")
         animation_thread = threading.Thread(target=run_sides)
 
     else:

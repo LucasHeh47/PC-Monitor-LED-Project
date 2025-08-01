@@ -56,11 +56,24 @@ def send_json(data):
         print("Error:", e)
 
 def submit():
+    global error_text
+    error_text.set("")
+
     anim = animation.get()
     colors = [used_colorsbox.get(i) for i in range(used_colorsbox.size())]
     speed_val = speed_entry.get()
     length_val = length_entry.get()
     steps_val = steps_entry.get()
+
+    if anim not in ["average_screen_color", "rainbow"]:
+        if len(colors) == 0:
+            error_text.set("Colors is empty")
+            return
+
+    if anim == "sides":
+        if len(colors) < 4:
+            error_text.set("Must need 4 colors for each side")
+            return
 
     try:
         speed = float(speed_val)
@@ -73,7 +86,7 @@ def submit():
         length = 10
 
     try:
-        steps = int(length_val)
+        steps = int(steps_val)
     except ValueError:
         steps = 100
 
@@ -169,7 +182,7 @@ animation = tk.StringVar(value="solid")
 anim_frame = ttk.Frame(app)
 anim_frame.pack(padx=10, pady=5)
 
-anim_options = ["solid", "breathing", "snake", "rainbow", "average_screen_color"]
+anim_options = ["solid", "sides", "breathing", "snake", "rainbow", "average_screen_color"]
 
 # Get the longest text label (pretty title)
 longest_label = max(anim_options, key=lambda s: len(s.replace("_", " ").title()))
@@ -304,5 +317,8 @@ custom_name_entry.pack(padx=20, pady=5)
 ttk.Button(app, text="🎨 Pick & Add Custom Color", bootstyle="info", command=create_custom_color).pack(pady=5)
 
 ttk.Button(app, text="🚀 Send to LED Strip", bootstyle="primary", command=submit).pack(pady=20)
+
+error_text = tk.StringVar(value="")
+ttk.Label(app, textvariable=error_text, foreground="red").pack(pady=10)
 
 app.mainloop()

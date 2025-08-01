@@ -245,6 +245,17 @@ def handle_JSON(json):
             rainbow()
         animation_thread = threading.Thread(target=run_rainbow)
 
+    elif animation_type == "sides":
+        def run_sides():
+            light_sides({
+                # colors 1 2 3 and 4 are left top right bottom
+                "left": color_names[0],
+                "top": color_names[1],
+                "right": color_names[2],
+                "bottom": color_names[3]
+            })
+        animation_thread = threading.Thread(target=run_sides)
+
     else:
         print(f"Unknown animation type: {animation_type}")
         return

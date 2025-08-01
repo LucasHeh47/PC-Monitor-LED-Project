@@ -5,7 +5,7 @@ import neopixel
 import socket
 import json
 from hdmi import release_capture, get_average_screen_color_fast
-from color import Color
+from color import Color, ColorValue
 
 version = "1.1"
 
@@ -85,11 +85,13 @@ def breathing(colors, speed, steps):
 def light_sides(side_colors: dict):
     # Use .value if using Color enum
     def get_rgb(c):
-        if isinstance(c, Color):
+        if isinstance(c, ColorValue):
             return c.value
         elif isinstance(c, (list, tuple)) and len(c) == 3:
             return c
-        print("Error reading RGB value: " + c)
+        elif isinstance(c, str):
+            return Color[c].value
+        print("Error reading RGB value: " + str(c))
         return (0, 0, 0)
 
     # Define segment start indices

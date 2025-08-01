@@ -110,6 +110,8 @@ def light_sides(side_colors: dict):
     for i in range(NUM_LEDS):
         pixels[i] = (0, 0, 0)
 
+    print("Sides now displaying: " + str([(k, v) for k, v in side_colors.items()]))
+
     # Set colors for each specified side
     for side, color in side_colors.items():
         rgb = tuple(int(c) for c in get_rgb(color))

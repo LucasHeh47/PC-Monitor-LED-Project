@@ -89,6 +89,7 @@ def light_sides(side_colors: dict):
             return c.value
         elif isinstance(c, (list, tuple)) and len(c) == 3:
             return c
+        print("Error reading RGB value: " + c)
         return (0, 0, 0)
 
     # Define segment start indices

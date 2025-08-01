@@ -85,7 +85,11 @@ def breathing(colors, speed, steps):
 def light_sides(side_colors: dict):
     # Use .value if using Color enum
     def get_rgb(c):
-        return c.value if isinstance(c, Color) else c
+        if isinstance(c, Color):
+            return c.value
+        elif isinstance(c, (list, tuple)) and len(c) == 3:
+            return c
+        return (0, 0, 0)
 
     # Define segment start indices
     left_start = 0

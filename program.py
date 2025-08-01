@@ -107,7 +107,7 @@ def light_sides(side_colors: dict):
 
     # Set colors for each specified side
     for side, color in side_colors.items():
-        rgb = get_rgb(color)
+        rgb = tuple(int(c) for c in get_rgb(color))
         if side in side_ranges:
             for i in side_ranges[side]:
                 pixels[i] = rgb
